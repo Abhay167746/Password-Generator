@@ -9,8 +9,9 @@ function App() {
   const [strength, setStrength] = useState("Weak");
   const [strengthPercent, setStrengthPercent] = useState(25);
   const [showToast, setShowToast] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  // dhyan rakhna hai Password Generator
+  // 🔐 Password Generator
   const passwordGenerator = useCallback(() => {
     let pass = "";
     let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -26,12 +27,12 @@ function App() {
     setPassword(pass);
   }, [length, numberAllowed, charAllowed]);
 
-  //  Auto-generate password hai theek hai n 
+  // 🔄 Auto-generate password
   useEffect(() => {
     passwordGenerator();
   }, [passwordGenerator]);
 
-  //  Strength Calculation h ye dhyan rkhna
+  // 📊 Strength Calculation
   useEffect(() => {
     let score = 0;
 
@@ -55,23 +56,34 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-      <div className="w-full max-w-md bg-gray-800 p-6 rounded-lg shadow-lg">
-        <h1 className="text-white text-2xl font-bold text-center mb-4">
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
+      <div className="w-full max-w-md bg-gray-800 p-6 rounded-xl shadow-xl space-y-5">
+
+        {/* Title */}
+        <h1 className="text-white text-2xl font-bold text-center">
           🔐 Password Generator
         </h1>
 
         {/* Password Field */}
-        <div className="flex rounded overflow-hidden mb-3">
+        <div className="flex rounded-lg overflow-hidden">
           <input
-            type="text"
+            type={showPassword ? "text" : "password"}
             value={password}
             readOnly
-            className="w-full px-3 py-2 outline-none text-black"
+            className="w-full px-4 py-2 text-black outline-none"
           />
+
+          <button
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="bg-gray-600 hover:bg-gray-700 text-white px-4"
+            title="Show / Hide Password"
+          >
+            {showPassword ? "🙈" : "👁"}
+          </button>
+
           <button
             onClick={copyPassword}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 cursor-pointer"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-5"
           >
             Copy
           </button>
@@ -79,15 +91,16 @@ function App() {
 
         {/* Toast */}
         {showToast && (
-          <p className="text-green-400 text-center mb-2">
+          <p className="text-green-400 text-center text-sm">
             ✅ Password Copied!
           </p>
         )}
 
         {/* Length Slider */}
-        <div className="mb-4">
-          <label className="text-white">
-            Length: <span className="text-orange-400">{length}</span>
+        <div className="space-y-2">
+          <label className="text-white text-sm">
+            Length:{" "}
+            <span className="text-orange-400 font-semibold">{length}</span>
           </label>
           <input
             type="range"
@@ -100,10 +113,9 @@ function App() {
         </div>
 
         {/* Options */}
-        <div className="flex justify-between text-white text-sm mb-4">
+        <div className="flex justify-between text-white text-sm">
           <label className="flex items-center gap-2 cursor-pointer">
             <input
-            className="cursor-pointer"
               type="checkbox"
               checked={numberAllowed}
               onChange={() => setNumberAllowed((prev) => !prev)}
@@ -113,7 +125,6 @@ function App() {
 
           <label className="flex items-center gap-2 cursor-pointer">
             <input
-            className="cursor-pointer"
               type="checkbox"
               checked={charAllowed}
               onChange={() => setCharAllowed((prev) => !prev)}
@@ -122,11 +133,11 @@ function App() {
           </label>
         </div>
 
-        {/* 🔥 Strength Progress Bar */}
-        <div>
+        {/* Strength Progress Bar */}
+        <div className="space-y-2">
           <div className="w-full h-2 bg-gray-600 rounded">
             <div
-              className={`h-2 rounded transition-all duration-300 cursor-pointer ${
+              className={`h-2 rounded transition-all duration-300 ${
                 strength === "Weak"
                   ? "bg-red-500"
                   : strength === "Medium"
@@ -137,7 +148,7 @@ function App() {
             />
           </div>
 
-          <p className="text-center text-white mt-2">
+          <p className="text-center text-white text-sm">
             Strength:{" "}
             <span
               className={`font-bold ${
@@ -152,6 +163,7 @@ function App() {
             </span>
           </p>
         </div>
+
       </div>
     </div>
   );
